@@ -26,18 +26,14 @@ class Storage {
 
     if (role == "remove") {
       this.data = this.data.filter((item) => item.id != id);
-      this.handleUnload();
+      const json = JSON.stringify(this.data);
+      localStorage.setItem("data", json);
+      this.data = JSON.parse(localStorage.getItem("data"));
+
+      window.location.reload()
     }
   }
 
-  handleUnload() {
-    const json = JSON.stringify(this.data);
-    localStorage.setItem("data", json);
-    this.data = JSON.parse(localStorage.getItem("data"));
-
-    const eventUnload = new Event("list:ready");
-    window.dispatchEvent(eventUnload);
-  }
 
   // сохрание перед перезагрузкой
   handleBeforeUnload() {
