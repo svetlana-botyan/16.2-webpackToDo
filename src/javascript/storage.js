@@ -1,5 +1,3 @@
-import { List } from "./list";
-
 class Storage {
   data = JSON.parse(localStorage.getItem("data")) || [];
 
