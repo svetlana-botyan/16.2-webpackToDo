@@ -3,6 +3,7 @@ import "../scss/app.scss";
 import { Storage } from "./storage";
 import { Form } from "./form";
 import { List } from "./list";
+import { UpdatedList } from "./updated-list";
 
 const formElement = document.querySelector("#form");
 const listParentElement = document.querySelector("#listParent");
@@ -16,8 +17,8 @@ const listElements = {
   educationGroup: document.querySelector("#educationGroup"),
 };
 
-
-const storage = new Storage();
-const data = storage.data;
-new Form(data, formElement,selectPriorityElement);
-new List(data, listParentElement, listElements);
+const storage = new Storage(listParentElement)
+const data = storage.data
+new Form(data, formElement, selectPriorityElement)
+new List(data, listParentElement, listElements)
+new UpdatedList(data, listParentElement)

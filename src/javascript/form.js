@@ -4,16 +4,16 @@ class Form {
     this.data = data;
     this.selectPriorityElement = selectPriorityElement;
 
-    this.#init();
+    this.init();
   }
 
-  #init() {
-    this.handleSubmit = this.#handleSubmit.bind(this);
+  init() {
+    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.formElement.addEventListener("submit", this.handleSubmit);
   }
 
-  #handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
 
     const toDo = {

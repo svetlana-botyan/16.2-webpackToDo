@@ -4,18 +4,21 @@ class List {
     this.data = data;
     this.listElements = listElements;
 
-    this.#init();
+    this.init();
   }
 
-  #init() {
-    this.handleChange = this.#handleChange.bind(this);
-    this.handleEventNeed = this.#handleEventNeed.bind(this);
+  init() {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleEventNeed = this.handleEventNeed.bind(this);
 
     this.listParentElement.addEventListener("change", this.handleChange);
     window.addEventListener("render:need", this.handleEventNeed);
+
+    const eventStorage = new Event("list:ready");
+    window.dispatchEvent(eventStorage);
   }
 
-  #handleChange(event) {
+  handleChange(event) {
     const { target } = event;
     const { id, checked, type } = target;
 
@@ -30,7 +33,7 @@ class List {
     this.render();
   }
 
-  #handleEventNeed() {
+  handleEventNeed() {
     this.render();
   }
 
@@ -61,12 +64,12 @@ class List {
   }
 
   render() {
+
     this.clearLists();
 
     this.data.forEach((toDo) => {
       const { group } = toDo;
       const listElement = this.listElements[group];
-      console.log(listElement)
 
       const result = this.createToDoTemplate(toDo);
       listElement.innerHTML += result;
