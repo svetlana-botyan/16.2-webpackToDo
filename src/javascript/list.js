@@ -1,48 +1,48 @@
 class List {
-  constructor(data, listParentElement, listElements) {
-    this.listParentElement = listParentElement;
-    this.data = data;
-    this.listElements = listElements;
+  constructor (data, listParentElement, listElements) {
+    this.listParentElement = listParentElement
+    this.data = data
+    this.listElements = listElements
 
-    this.init();
+    this.init()
   }
 
-  init() {
-    this.handleChange = this.handleChange.bind(this);
-    this.handleEventNeed = this.handleEventNeed.bind(this);
+  init () {
+    this.handleChange = this.handleChange.bind(this)
+    this.handleEventNeed = this.handleEventNeed.bind(this)
 
-    this.listParentElement.addEventListener("change", this.handleChange);
-    window.addEventListener("render:need", this.handleEventNeed);
+    this.listParentElement.addEventListener('change', this.handleChange)
+    window.addEventListener('render:need', this.handleEventNeed)
 
-    const eventStorage = new Event("list:ready");
-    window.dispatchEvent(eventStorage);
+    const eventStorage = new Event('list:ready')
+    window.dispatchEvent(eventStorage)
   }
 
-  handleChange(event) {
-    const { target } = event;
-    const { id, checked, type } = target;
+  handleChange (event) {
+    const { target } = event
+    const { id, checked, type } = target
 
-    if (type !== "checkbox") return;
+    if (type !== 'checkbox') return
 
     this.data.forEach((item) => {
       if (item.id == id) {
-        item.isChecked = checked;
+        item.isChecked = checked
       }
-    });
+    })
 
-    this.render();
+    this.render()
   }
 
-  handleEventNeed() {
-    this.render();
+  handleEventNeed () {
+    this.render()
   }
 
-  createToDoTemplate({ id, textContent, isChecked, index }) {
-    const checkedAttr = isChecked ? "checked" : ""; // если уже чекнули то он останется
+  createToDoTemplate ({ id, textContent, isChecked, index }) {
+    const checkedAttr = isChecked ? 'checked' : '' // если уже чекнули то он останется
     const icon =
       index == 1
-        ? `<svg class="pe-none hourglassSplit" width="16" height="16"> <use style="color:red" href="#hourglassSplit" /></svg>`
-        : `<svg class="pe-none hourglass" width="16" height="16"> <use style="color:green" href="#hourglass" /></svg>`;
+        ? '<svg class="pe-none hourglassSplit" width="16" height="16"> <use style="color:red" href="#hourglassSplit" /></svg>'
+        : '<svg class="pe-none hourglass" width="16" height="16"> <use style="color:green" href="#hourglass" /></svg>'
 
     const template = `
         <div class="new-task col-12 align-items-start d-flex ${checkedAttr} " >
@@ -58,30 +58,29 @@ class List {
 
           <button  class="btn  btn-outline-danger" data-role="remove" data-id="${id}" ><svg class="pe-none " width="16" height="16">
           <use href="#trash" /></svg></button>
-        </div>`;
+        </div>`
 
-    return template;
+    return template
   }
 
-  render() {
-
-    this.clearLists();
+  render () {
+    this.clearLists()
 
     this.data.forEach((toDo) => {
-      const { group } = toDo;
-      const listElement = this.listElements[group];
+      const { group } = toDo
+      const listElement = this.listElements[group]
 
-      const result = this.createToDoTemplate(toDo);
-      listElement.innerHTML += result;
-    });
+      const result = this.createToDoTemplate(toDo)
+      listElement.innerHTML += result
+    })
   }
 
   // ф-ция очищает в свойстве group innerHTML у всех div-ов объектa listElements
-  clearLists() {
-    for (let group in this.listElements) {
-      this.listElements[group].innerHTML = "";
+  clearLists () {
+    for (const group in this.listElements) {
+      this.listElements[group].innerHTML = ''
     }
   }
 }
 
-export { List };
+export { List }

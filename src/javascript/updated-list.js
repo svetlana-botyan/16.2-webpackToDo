@@ -1,62 +1,85 @@
 class UpdatedList {
   isEdit = false;
   currentEditedToDo = {};
-  eventRenderNeed = new Event("render:need");
+  eventRenderNeed = new Event('render:need');
 
-  constructor(data, listParentElement) {
-    this.listParentElement = listParentElement;
-    this.data = data;
+  constructor (data, listParentElement) {
+    this.listParentElement = listParentElement
+    this.data = data
 
-    this.init();
+    this.init()
   }
 
-  init() {
-     this.handleClickButtonEdit = this.handleClickButtonEdit.bind(this);
+  init () {
+    this.handleClickButtonRemove = this.handleClickButtonRemove.bind(this)
+    this.handleClickButtonEdit = this.handleClickButtonEdit.bind(this)
     this.handleClickButtonCancilEdit =
-      this.handleClickButtonCancilEdit.bind(this);
-    this.handleFormEditSubmit = this.handleFormEditSubmit.bind(this);
-
+      this.handleClickButtonCancilEdit.bind(this)
+    this.handleFormEditSubmit = this.handleFormEditSubmit.bind(this)
 
     this.listParentElement.addEventListener(
-      "click",
+      'click',
+      this.handleClickButtonRemove
+    )
+    this.listParentElement.addEventListener(
+      'click',
       this.handleClickButtonEdit
-    );
+    )
     this.listParentElement.addEventListener(
-      "click",
+      'click',
       this.handleClickButtonCancilEdit
-    );
+    )
     this.listParentElement.addEventListener(
-      "submit",
+      'submit',
       this.handleFormEditSubmit
-    );
-
+    )
   }
 
-  handleClickButtonEdit(event) {
-    const { target } = event;
-    const { role, id } = target.dataset;
+  // удаление задачи
+  handleClickButtonRemove (event) {
+    const { role, id } = event.target.dataset
 
-    if (role == "edit") {
+    if (role == 'remove') {
+      let removedItemIdex = 0
+
+      this.data.forEach((item, index) => {
+        if (item.id == id) {
+          console.log(index)
+          removedItemIdex = index
+        }
+      })
+
+      this.data.splice(removedItemIdex, 1)
+
+      window.dispatchEvent(this.eventRenderNeed)
+    }
+  }
+
+  handleClickButtonEdit (event) {
+    const { target } = event
+    const { role, id } = target.dataset
+
+    if (role == 'edit') {
       // запрет на одновременное редактирование
       if (this.isEdit == true) {
-        return;
+        return
       }
 
       this.data.forEach((item) => {
         if (item.id == id) {
-          const { parentElement } = target;
-          this.currentEditedToDo = item; //значения исходные задачи
-          //console.log(item);
-          const blockEditElement = this.blockEditTemplate(item); // item объект каждой toDo
+          const { parentElement } = target
+          this.currentEditedToDo = item // значения исходные задачи
+          // console.log(item);
+          const blockEditElement = this.blockEditTemplate(item) // item объект каждой toDo
 
-          parentElement.outerHTML = blockEditElement;
-          this.isEdit = true;
+          parentElement.outerHTML = blockEditElement
+          this.isEdit = true
         }
-      });
+      })
     }
   }
 
-  blockEditTemplate({ textContent }) {
+  blockEditTemplate ({ textContent }) {
     const templateEdit = `
       <form data-role="editForm" id="formEdit" class="d-flex col-12">
     <input  value="${textContent}" name="textContent" class="form-control   " placeholder="Отредакрируйте задачу" type="text" required>
@@ -77,45 +100,45 @@ class UpdatedList {
           <use href="#check" />
         </svg></button>
   </form>
-  `;
+  `
 
-    return templateEdit;
+    return templateEdit
   }
 
-  handleClickButtonCancilEdit(event) {
-    const { role } = event.target.dataset;
+  handleClickButtonCancilEdit (event) {
+    const { role } = event.target.dataset
     // console.log(role)
 
-    if (role == "cancel") {
-      window.dispatchEvent(this.eventRenderNeed);
-      this.isEdit = false;
+    if (role == 'cancel') {
+      window.dispatchEvent(this.eventRenderNeed)
+      this.isEdit = false
     }
   }
 
-  handleFormEditSubmit(event) {
-    event.preventDefault();
+  handleFormEditSubmit (event) {
+    event.preventDefault()
 
-    const { target } = event;
-    //console.log(target);
-    const { role, id } = target.dataset;
+    const { target } = event
+    // console.log(target);
+    const { role, id } = target.dataset
 
-    if (role == "editForm") {
-      const textContent = target.querySelector('[name="textContent"]').value;
-      const group = target.querySelector('[name="group"]').value;
+    if (role == 'editForm') {
+      const textContent = target.querySelector('[name="textContent"]').value
+      const group = target.querySelector('[name="group"]').value
       const selectPriorityElement = target.querySelector(
         '[name="priorityContent"]'
-      );
+      )
 
-      const index = selectPriorityElement.options.selectedIndex + 1;
+      const index = selectPriorityElement.options.selectedIndex + 1
 
-      this.currentEditedToDo.textContent = textContent;
-      this.currentEditedToDo.group = group;
-      this.currentEditedToDo.index = index;
+      this.currentEditedToDo.textContent = textContent
+      this.currentEditedToDo.group = group
+      this.currentEditedToDo.index = index
 
-      window.dispatchEvent(this.eventRenderNeed);
-      this.isEdit = false;
+      window.dispatchEvent(this.eventRenderNeed)
+      this.isEdit = false
     }
   }
 }
 
-export { UpdatedList };
+export { UpdatedList }
